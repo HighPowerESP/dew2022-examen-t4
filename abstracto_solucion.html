@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #lienzo {
+            border: 1px solid black;
+            box-shadow: 5px 5px 5px black;
+            width: 500px;
+            height: 400px;
+            position: relative;
+            margin: 10px;
+            overflow: hidden;
+        }
+
+        .cuadro {
+            position: absolute;
+        }
+
+        .circulo {
+            position: absolute;
+            border-radius: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cuadro abstracto - Neoplasticismo</h1>
+    <div id="lienzo">
+        <div 
+            class="cuadro" 
+            style="background-color: blue;
+                    top: 10px;
+                    left: 5px;
+                    width: 140px;
+                    height: 60px;
+                    opacity: 0.7">
+        </div>
+        <div 
+        class="cuadro" 
+        style="background-color: yellow;
+                top: 80px;
+                left: 250px;
+                width: 200px;
+                height: 160px;
+                opacity: 1">
+        </div>
+        <div 
+        class="circulo" 
+        style="background-color: red;
+                top: 100px;
+                left: 305px;
+                width: 100px;
+                height: 260px;
+                opacity: 0.6">
+        </div>
+        <div 
+        class="circulo" 
+        style="background-color: green;
+                top: 150px;
+                left: 75px;
+                width: 400px;
+                height: 200px;
+                opacity: 0.6">
+        </div>
+    </div>
+    <button id="iniciar" onclick="iniciar()">Iniciar</button>
+    <button id="parar" onclick="parar()" disabled>Parar</button>
+    <script>
+        const COLORES = ["red", "blue", "yellow", "green", "black"];
+        const FORMAS = ["cuadro", "circulo"];
+
+        const LIENZO = document.querySelector("#lienzo");
+        const INICIAR = document.querySelector("#iniciar");
+        const PARAR = document.querySelector("#parar")
+
+        let intervalo;
+        function iniciar() {
+            intervalo = setInterval(pintar, 500);
+            INICIAR.disabled = true;
+            PARAR.disabled = false;
+        }
+
+        function parar() {
+            clearInterval(intervalo);
+            INICIAR.disabled = false;
+            PARAR.disabled = true;
+        }
+
+        function pintar() {
+            let nuevo = document.createElement("div");
+            nuevo.className = FORMAS[aleatorio(0,FORMAS.length-1)];
+            nuevo.style.backgroundColor=COLORES[aleatorio(0,COLORES.length-1)];
+            nuevo.style.top = aleatorio(5,250) + "px";
+            nuevo.style.left = aleatorio(5,300) + "px";
+            nuevo.style.height = aleatorio(5,150) + "px";
+            nuevo.style.width = aleatorio(5,200) + "px";
+            nuevo.style.opacity = 1;
+            nuevo.dataset.temporizador=setInterval(desaparecer, 1000, nuevo);
+            LIENZO.append(nuevo);
+        }
+
+        function desaparecer(elemento) {
+            console.log(elemento);
+            if (elemento.style.opacity==0) {
+                clearInterval(elemento.dataset.temporizador);
+                elemento.remove();
+            } else elemento.style.opacity-=0.1;
+        }
+        
+        function aleatorio(a,b) {
+            return Math.floor(Math.random()*(b-a+1))+a;
+        }
+
+    </script>
+</body>
+</html>
